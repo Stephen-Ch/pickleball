@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pickleball Learning Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <header>
+            <h1>🏓 Pickleball Learning Game</h1>
+            <p>Learn pickleball rules while playing a fun pong-style game!</p>
+        </header>
+        
+        <div class="game-info">
+            <div class="score">
+                <span>Player: <span id="playerScore">0</span></span>
+                <span>Computer: <span id="computerScore">0</span></span>
+            </div>
+            <div class="game-mode">
+                <span id="gameMode">Practice Mode</span>
+            </div>
+        </div>
+        
+        <canvas id="gameCanvas" width="800" height="400"></canvas>
+        
+        <div class="controls">
+            <button id="startBtn">Start Game</button>
+            <button id="pauseBtn">Pause</button>
+            <button id="rulesBtn">Rules</button>
+            <button id="resetBtn">Reset</button>
+        </div>
+        
+        <div class="rule-tip" id="ruleTip">
+            <div class="tip-content">
+                <h3 id="tipTitle">Welcome!</h3>
+                <p id="tipText">Click "Start Game" to begin learning pickleball through play. Move your paddle with the mouse or arrow keys!</p>
+            </div>
+        </div>
+        
+        <div class="rules-modal" id="rulesModal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Pickleball Rules</h2>
+                <div class="rules-content">
+                    <h3>Basic Rules:</h3>
+                    <ul>
+                        <li><strong>Underhand Serve:</strong> Must be served underhand below the waist</li>
+                        <li><strong>Double Bounce Rule:</strong> Ball must bounce once on each side before volleys</li>
+                        <li><strong>Non-Volley Zone:</strong> 7-foot zone on each side of net where you can't volley</li>
+                        <li><strong>Scoring:</strong> Only serving team can score points</li>
+                        <li><strong>Win Condition:</strong> First to 11 points, must win by 2</li>
+                    </ul>
+                    <h3>Court Layout:</h3>
+                    <ul>
+                        <li>20' x 44' court divided by a net</li>
+                        <li>Non-volley zones (kitchen) are 7' from the net</li>
+                        <li>Service courts are behind the non-volley zones</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="game.js"></script>
+</body>
+</html>
