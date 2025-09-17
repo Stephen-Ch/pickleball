@@ -1,7 +1,85 @@
 <app-shell>
-  <h2>Pickleball Rules</h2>
-  <p>Learn the essential rules of pickleball through interactive lessons.</p>
-  <div class="placeholder">
-    <p>Rules content coming soon...</p>
-  </div>
+  <main class="rules-explorer">
+    <header class="rules-header">
+      <h1>Pickleball Rules Explorer</h1>
+      <p class="rules-subtitle">Learn the essential rules one card at a time</p>
+      <div class="progress-indicator" aria-label="Rule progress">
+        <span class="progress-text">
+          Rule {{ currentRuleNumber }} of {{ totalRules }}
+        </span>
+        <div class="progress-bar" role="progressbar" 
+             [attr.aria-valuenow]="currentRuleNumber"
+             [attr.aria-valuemin]="1"
+             [attr.aria-valuemax]="totalRules">
+          <div class="progress-fill" 
+               [style.width.%]="(currentRuleNumber / totalRules) * 100">
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="card-container" aria-live="polite">
+      <div class="rule-card" [attr.aria-labelledby]="'rule-title-' + currentRule.id">
+        <h2 [id]="'rule-title-' + currentRule.id" class="card-title">
+          {{ currentRule.title }}
+        </h2>
+        <div class="card-content">
+          <p class="card-text">{{ currentRule.shortText }}</p>
+          <div class="card-footer">
+            <a [href]="currentRule.moreInfoUrl" 
+               target="_blank" 
+               rel="noopener noreferrer"
+               class="more-info-link"
+               [attr.aria-label]="'Learn more about ' + currentRule.title + ' (opens in new tab)'">
+              Learn More
+              <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <nav class="card-navigation" aria-label="Rule navigation">
+      <button 
+        type="button"
+        class="nav-button nav-previous"
+        [disabled]="!canGoPrevious"
+        (click)="previousRule()"
+        [attr.aria-label]="isFirstRule ? 'No previous rule available' : 'Go to previous rule'"
+        [attr.title]="isFirstRule ? 'Already at first rule' : 'Previous rule'">
+        <span aria-hidden="true">← Previous</span>
+        @if (isFirstRule) {
+          <span class="sr-only">No previous rule</span>
+        }
+      </button>
+
+      <div class="card-indicators" role="tablist" aria-label="Rule indicators">
+        @for (rule of getAllRules(); track rule.id; let i = $index) {
+          <button 
+            type="button"
+            class="card-indicator"
+            [class.active]="rule.id === currentRule.id"
+            [attr.aria-selected]="rule.id === currentRule.id"
+            [attr.aria-label]="'Go to rule ' + (i + 1) + ': ' + rule.title"
+            (click)="goToRule(rule)"
+            role="tab">
+            <span class="sr-only">Rule {{ i + 1 }}</span>
+          </button>
+        }
+      </div>
+
+      <button 
+        type="button"
+        class="nav-button nav-next"
+        [disabled]="!canGoNext"
+        (click)="nextRule()"
+        [attr.aria-label]="isLastRule ? 'No next rule available' : 'Go to next rule'"
+        [attr.title]="isLastRule ? 'Already at last rule' : 'Next rule'">
+        <span aria-hidden="true">Next →</span>
+        @if (isLastRule) {
+          <span class="sr-only">No next rule</span>
+        }
+      </button>
+    </nav>
+  </main>
 </app-shell>
