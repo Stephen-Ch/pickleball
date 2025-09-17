@@ -3,6 +3,7 @@ import { CommonModule, TitleCasePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { Shell } from '../shell/shell';
 import { QuizQuestion, getRandomQuestions, calculateGrade, getGradeMessage } from './quiz-questions';
+import { ProgressService } from '../services/progress.service';
 
 interface QuizState {
   questions: QuizQuestion[];
@@ -23,8 +24,32 @@ export class Quiz {
   
   quizState!: QuizState;
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private progressService: ProgressService) {
     this.initializeQuiz();
+  }
+
+  get quizProgress() {
+    return this.progressService.getQuizProgress();
+  }
+
+  get hasTakenQuizBefore(): boolean {
+    return this.quizProgress.totalQuizzesTaken > 0;
+  }
+
+  get improvementMessage(): string {
+    const progress = this.quizProgress;
+    if (progress.totalQuizzesTaken <= 1) return '';
+    
+    const currentPercentage = this.scorePercentage;
+    const bestPercentage = progress.bestPercentage;
+    
+    if (currentPercentage > bestPercentage) {
+      return `🎉 New personal best! Previous best: ${bestPercentage}%`;
+    } else if (currentPercentage === bestPercentage) {
+      return `🔥 Tied your best score of ${bestPercentage}%!`;
+    } else {
+      return `Your best score is still ${bestPercentage}%. Keep practicing!`;
+    }
   }
 
   private initializeQuiz(): void {
@@ -113,6 +138,14 @@ export class Quiz {
   finishQuiz(): void {
     this.quizState.isCompleted = true;
     this.quizState.showResults = true;
+    
+    // Save quiz progress
+    this.progressService.updateQuizProgress(
+      this.correctAnswers,
+      this.totalQuestions,
+      this.scorePercentage,
+      this.grade
+    );
   }
 
   restartQuiz(): void {

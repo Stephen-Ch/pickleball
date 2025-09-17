@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { TitleCasePipe } from '@angular/common';
 import { Shell } from '../shell/shell';
 import { PracticeScenario, PRACTICE_SCENARIOS, getNextScenario, getCurrentScenarioNumber, getTotalScenarios } from './practice-scenarios';
+import { ProgressService } from '../services/progress.service';
 
 export interface FeedbackState {
   isAnswered: boolean;
@@ -31,6 +32,10 @@ export class Practice implements OnInit {
   // Statistics
   correctAnswers: number = 0;
   totalAttempts: number = 0;
+  scenariosCompleted: number = 0;
+  sessionStartTime: Date = new Date();
+  
+  constructor(private progressService: ProgressService) {}
   
   get accuracyPercentage(): number {
     return this.totalAttempts > 0 ? Math.round((this.correctAnswers / this.totalAttempts) * 100) : 0;
@@ -42,6 +47,18 @@ export class Practice implements OnInit {
   
   get isLastScenario(): boolean {
     return this.currentScenarioNumber === this.totalScenarios;
+  }
+
+  get practiceProgress() {
+    return this.progressService.getPracticeProgress();
+  }
+
+  get overallAccuracy(): number {
+    return this.practiceProgress.accuracyPercentage;
+  }
+
+  get bestAccuracy(): number {
+    return this.practiceProgress.bestAccuracy;
   }
 
   ngOnInit(): void {
@@ -65,14 +82,39 @@ export class Practice implements OnInit {
   nextScenario(): void {
     const next = getNextScenario(this.currentScenario.id);
     if (next) {
+      this.scenariosCompleted++;
       this.loadScenario(next);
     }
   }
 
   restartPractice(): void {
+    // Save progress before restarting
+    this.saveSessionProgress();
+    
     this.loadScenario(PRACTICE_SCENARIOS[0]);
+    this.resetSessionStats();
+  }
+
+  finishPracticeSession(): void {
+    this.saveSessionProgress();
+  }
+
+  private saveSessionProgress(): void {
+    if (this.totalAttempts > 0) {
+      this.progressService.updatePracticeProgress(
+        this.scenariosCompleted,
+        this.correctAnswers,
+        this.totalAttempts,
+        this.currentScenario.type
+      );
+    }
+  }
+
+  private resetSessionStats(): void {
     this.correctAnswers = 0;
     this.totalAttempts = 0;
+    this.scenariosCompleted = 0;
+    this.sessionStartTime = new Date();
   }
 
   getOptionLabel(index: number): string {
