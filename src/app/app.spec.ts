@@ -14,10 +14,17 @@ describe('App', () => {
     expect(app).toBeTruthy();
   });
 
-  it('should render title', () => {
+  it('should contain only router-outlet as template content (sentinel test)', () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, learn-pickle');
+    
+    // Template should contain only router-outlet, no other meaningful content
+    const routerOutlets = compiled.querySelectorAll('router-outlet');
+    expect(routerOutlets.length).toBe(1);
+    
+    // Should not contain any other elements (div, main, h1, etc.)
+    const otherElements = compiled.querySelectorAll('*:not(router-outlet)');
+    expect(otherElements.length).toBe(0);
   });
 });
