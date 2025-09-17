@@ -1,0 +1,19 @@
+<header>
+  <nav role="navigation" aria-label="Main navigation">
+    <h1><a routerLink="/" tabindex="0">LearnPickle</a></h1>
+    <ul>
+      <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" tabindex="0">Home</a></li>
+      <li><a routerLink="/rules" routerLinkActive="active" tabindex="0">Rules</a></li>
+      <li><a routerLink="/practice" routerLinkActive="active" tabindex="0">Practice</a></li>
+      <li><a routerLink="/quiz" routerLinkActive="active" tabindex="0">Quiz</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main role="main">
+  <ng-content></ng-content>
+</main>
+
+<footer role="contentinfo">
+  <p>&copy; 2025 LearnPickle - Teaching pickleball rules through play</p>
+</footer>
