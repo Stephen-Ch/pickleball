@@ -1,1 +1,240 @@
-/* You can add global styles to this file, and also import other style files */
+/* LearnPickle Global Styles - Atari Retro Theme */
+@use './styles/tokens' as *;
+
+/* Reset and Base Styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+body {
+  font-family: $font-family-primary;
+  font-size: $font-size-base;
+  background-color: $color-bg-primary;
+  color: $color-text-primary;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-family: $font-family-primary;
+  font-weight: bold;
+  line-height: 1.2;
+  margin-bottom: $space-4;
+}
+
+h1 {
+  font-size: $font-size-3xl;
+  color: $color-accent-yellow;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+h2 {
+  font-size: $font-size-2xl;
+  color: $color-accent-orange;
+  text-transform: uppercase;
+}
+
+h3 {
+  font-size: $font-size-xl;
+  color: $color-text-primary;
+}
+
+p {
+  margin-bottom: $space-4;
+  line-height: 1.6;
+}
+
+/* Links */
+a {
+  color: $color-accent-cyan;
+  text-decoration: none;
+  transition: color $duration-fast $ease-out;
+  
+  &:hover {
+    color: $color-hover;
+    text-decoration: underline;
+  }
+  
+  &:focus {
+    outline: $focus-outline;
+    outline-offset: $focus-offset;
+    border-radius: $border-radius;
+  }
+  
+  &:active {
+    color: $color-active;
+  }
+}
+
+/* Buttons */
+button, .btn {
+  font-family: $font-family-primary;
+  font-size: $font-size-base;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  
+  background-color: $color-bg-secondary;
+  color: $color-text-primary;
+  border: $border-width-thick $border-style $color-text-primary;
+  padding: $space-3 $space-6;
+  cursor: pointer;
+  
+  transition: all $duration-fast $ease-out;
+  
+  &:hover {
+    background-color: $color-text-primary;
+    color: $color-bg-primary;
+    border-color: $color-hover;
+  }
+  
+  &:focus {
+    outline: $focus-outline;
+    outline-offset: $focus-offset;
+  }
+  
+  &:active {
+    background-color: $color-active;
+    border-color: $color-active;
+    color: $color-bg-primary;
+  }
+  
+  &:disabled {
+    background-color: $color-bg-accent;
+    color: $color-disabled;
+    border-color: $color-disabled;
+    cursor: not-allowed;
+    
+    &:hover {
+      background-color: $color-bg-accent;
+      color: $color-disabled;
+      border-color: $color-disabled;
+    }
+  }
+}
+
+/* Form Elements */
+input, textarea, select {
+  font-family: $font-family-primary;
+  font-size: $font-size-base;
+  
+  background-color: $color-bg-secondary;
+  color: $color-text-primary;
+  border: $border-width-thin $border-style $color-text-secondary;
+  padding: $space-3;
+  
+  &:focus {
+    outline: $focus-outline;
+    outline-offset: $focus-offset;
+    border-color: $color-accent-cyan;
+  }
+  
+  &::placeholder {
+    color: $color-text-muted;
+  }
+}
+
+/* Navigation Focus Styles */
+nav {
+  a {
+    display: inline-block;
+    padding: $space-2 $space-4;
+    margin: $space-1;
+    border: $border-width-thin $border-style transparent;
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+    
+    &:focus {
+      outline: $focus-outline;
+      outline-offset: $focus-offset;
+      background-color: $color-bg-secondary;
+    }
+    
+    &.active, &[aria-current="page"] {
+      color: $color-accent-yellow;
+      border-color: $color-accent-yellow;
+      background-color: $color-bg-secondary;
+    }
+  }
+}
+
+/* Utility Classes */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-uppercase {
+  text-transform: uppercase;
+}
+
+/* Focus Ring for Better Accessibility */
+*:focus {
+  outline: $focus-outline;
+  outline-offset: $focus-offset;
+}
+
+/* Skip to main content link */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: $color-accent-yellow;
+  color: $color-bg-primary;
+  padding: $space-2 $space-4;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 0 0 4px 4px;
+  z-index: $z-index-tooltip;
+  
+  &:focus {
+    top: 0;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  body {
+    background-color: #000000;
+    color: #ffffff;
+  }
+  
+  a {
+    color: #00ffff;
+  }
+  
+  button, .btn {
+    border-width: $border-width-thick;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
