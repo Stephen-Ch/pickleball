@@ -8,14 +8,20 @@ import { BadgeService, Badge, BadgeStatus } from '../../services/badge.service';
   imports: [CommonModule],
   template: `
     <div class="badges-container">
-      <h2 class="badges-title">Your Achievements</h2>
+      <h1 class="badges-title" tabindex="-1">Your Achievements</h1>
       
       <div class="progress-summary">
         <div class="progress-bar-container">
-          <div class="progress-bar">
+          <div class="progress-bar" 
+               role="progressbar"
+               aria-label="Overall badge progress"
+               [attr.aria-valuenow]="badgeStatus.earnedBadges"
+               [attr.aria-valuemin]="0"
+               [attr.aria-valuemax]="badgeStatus.totalBadges"
+               [attr.aria-valuetext]="badgeStatus.earnedBadges + ' out of ' + badgeStatus.totalBadges + ' badges earned'">
             <div 
               class="progress-fill" 
-              [style.width.%]="badgeStatus.earnedBadges / badgeStatus.totalBadges * 100"
+              [style.width.%]="badgeStatus.totalBadges > 0 ? (badgeStatus.earnedBadges / badgeStatus.totalBadges) * 100 : 0"
             ></div>
           </div>
           <span class="progress-text">
@@ -37,6 +43,10 @@ import { BadgeService, Badge, BadgeStatus } from '../../services/badge.service';
             class="badge-card" 
             [class.earned]="badge.isEarned"
             [class.unearned]="!badge.isEarned"
+            [attr.aria-label]="badge.isEarned ? 
+              'Badge earned: ' + badge.name + '. ' + badge.description + (badge.earnedDate ? '. Earned ' + formatEarnedDate(badge.earnedDate) : '') :
+              'Badge not yet earned: ' + badge.name + '. ' + badge.description + (badge.progressNeeded ? '. ' + badge.progressNeeded : '')"
+            role="region"
           >
             <div class="badge-icon">{{ badge.icon }}</div>
             <h3 class="badge-name">{{ badge.name }}</h3>

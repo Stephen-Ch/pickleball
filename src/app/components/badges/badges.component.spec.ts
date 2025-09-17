@@ -44,6 +44,7 @@ describe('BadgesComponent', () => {
 
   beforeEach(async () => {
     const badgeServiceSpy = jasmine.createSpyObj('BadgeService', ['getBadgeStatus']);
+    badgeServiceSpy.getBadgeStatus.and.returnValue(mockBadgeStatus);
 
     await TestBed.configureTestingModule({
       imports: [BadgesComponent],
@@ -55,8 +56,6 @@ describe('BadgesComponent', () => {
     fixture = TestBed.createComponent(BadgesComponent);
     component = fixture.componentInstance;
     badgeService = TestBed.inject(BadgeService) as jasmine.SpyObj<BadgeService>;
-    
-    badgeService.getBadgeStatus.and.returnValue(mockBadgeStatus);
     
     fixture.detectChanges();
   });
@@ -119,7 +118,7 @@ describe('BadgesComponent', () => {
       const secondBadge = badgeCards[1];
       expect(secondBadge.querySelector('.badge-icon')?.textContent).toBe('🎯');
       expect(secondBadge.querySelector('.badge-name')?.textContent).toBe('Practice Pro');
-      expect(secondBadge.querySelector('.badge-progress-needed')?.textContent).toBe('Complete 3 more scenarios');
+      expect(secondBadge.querySelector('.badge-progress-needed')?.textContent?.trim()).toBe('Complete 3 more scenarios');
     });
 
     it('should not show encouragement message when not near complete', () => {
@@ -326,7 +325,7 @@ describe('BadgesComponent', () => {
   describe('Accessibility', () => {
     it('should have proper heading structure', () => {
       const compiled = fixture.nativeElement as HTMLElement;
-      const mainTitle = compiled.querySelector('h2');
+      const mainTitle = compiled.querySelector('h1');
       const badgeNames = compiled.querySelectorAll('h3');
       
       expect(mainTitle).toBeTruthy();
