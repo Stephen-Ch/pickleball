@@ -27,11 +27,28 @@
       }
     }
   ],
+  "dataGroups": [
+    {
+      "name": "app-shell",
+      "urls": [
+        "/",
+        "/rules",
+        "/practice", 
+        "/quiz",
+        "/arcade"
+      ],
+      "cacheConfig": {
+        "strategy": "freshness",
+        "maxSize": 100,
+        "maxAge": "1d"
+      }
+    }
+  ],
   "navigationUrls": [
     "/**",
     "!/**/*.*",
     "!/**/*__*",
     "!/**/*__*/**"
   ],
-  "navigationRequestStrategy": "freshness"
+  "navigationRequestStrategy": "performance"
 }

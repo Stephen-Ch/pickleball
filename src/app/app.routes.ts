@@ -5,6 +5,7 @@ import { RulesComponent } from './rules.component';
 import { PracticeComponent } from './practice.component';
 import { QuizComponent } from './quiz.component';
 import { ArcadeComponent } from './arcade.component';
+import { OfflineComponent } from './offline.component';
 
 export const routes: Routes = [
   {
@@ -18,5 +19,6 @@ export const routes: Routes = [
   { path: 'arcade', component: ArcadeComponent },
       { path: '**', redirectTo: '' }
     ]
-  }
+  },
+  { path: 'offline', component: OfflineComponent }
 ];

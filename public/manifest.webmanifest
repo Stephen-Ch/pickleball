@@ -1,6 +1,6 @@
 {
-  "name": "LearnPickle - Pickleball Rules & Training",
-  "short_name": "LearnPickle", 
+  "name": "LearnPickle",
+  "short_name": "learn-pickle", 
   "description": "Learn pickleball rules and improve your game through interactive lessons, practice scenarios, and quizzes.",
   "theme_color": "#00ffff",
   "background_color": "#1a1a1a",
