@@ -238,7 +238,7 @@ describe('Quiz', () => {
 
   describe('DOM Elements and Accessibility', () => {
     it('should display quiz header correctly', () => {
-      const headerElement = debugElement.query(By.css('.quiz-header h2'));
+      const headerElement = debugElement.query(By.css('.quiz-header h1'));
       expect(headerElement).toBeTruthy();
       expect(headerElement.nativeElement.textContent.trim()).toBe('Pickleball Knowledge Quiz');
     });

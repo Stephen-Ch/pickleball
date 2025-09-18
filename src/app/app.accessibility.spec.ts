@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { Component, DebugElement } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { By } from '@angular/platform-browser';
 
 // Simple test component to check accessibility features
@@ -30,7 +31,8 @@ import { By } from '@angular/platform-browser';
     <footer role="contentinfo">
       <p>&copy; 2025 LearnPickle - Teaching pickleball rules through play</p>
     </footer>
-  `
+  `,
+  imports: [RouterLink, RouterLinkActive]
 })
 class AccessibilityTestComponent { }
 
