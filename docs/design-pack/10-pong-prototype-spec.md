@@ -27,6 +27,12 @@ Start with a **retro arcade prototype** inspired by Pong to create a low-frictio
 - Sound on/off setting
 - Left-handed control option
 
+## New Features & Requirements
+- **CPU difficulty toggles**: Player can select Beginner or Intermediate CPU difficulty (affects error rate and reaction time).
+- **Touch-first controls**: All controls and UI are optimized for touch/mobile; desktop support is secondary.
+- **Mute toggle for SFX**: Player can mute/unmute sound effects at any time.
+- **Rally call template**: All rally calls use the format: “<Call>: <One-sentence explainer>” (e.g., “Fault: volleyed in the Kitchen.”).
+
 ---
 
 ## Appendix A — Verbatim Source (pong modifications.txt)

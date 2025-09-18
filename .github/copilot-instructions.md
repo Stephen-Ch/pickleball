@@ -6,3 +6,10 @@
 Do **not** modify repo rails (versions, zoneless, tests, stoplight gates).
 
 (See prior message for full text.)
+
+---
+
+**Nintendo vibe:** All UI and copy should evoke a playful, friendly, and accessible Nintendo-like feel.
+**Mobile-first:** Prioritize mobile/touch UX in all features and layouts.
+**Header focus:** After every route change, focus should move to the header for accessibility.
+**High-contrast toggle:** Must be available in the header at all times.

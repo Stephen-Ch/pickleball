@@ -1,6 +1,17 @@
 # User Story & Teaching Goals — LearnPickle Game Design Pack (v2025.09.18)
 
-> Source: `ReadMe.txt` (normalized on 9-18-25)
+## Key Performance Indicators (KPIs)
+- Badge completion rate (%)
+- Median session duration > 3 minutes
+- Quiz score improvement over time
+
+## Design Principles
+- **Mobile-first**: All UI/UX and controls are designed for mobile devices first, desktop support is secondary.
+- **Friendly-coach voice**: All copy and feedback use a supportive, encouraging, and approachable tone.
+- **Explicit rally calls**: Every rally ends with a clear, umpire-style call and a one-sentence explainer.
+- **Header focus**: Focus is moved to the header after every route change for accessibility and context.
+- **High-contrast toggle**: Always available in the header and in Settings for accessibility.
+- **Offline-only requirement**: After install, the app must work fully offline with no network required for any feature.
 
 ## Purpose
 This document captures the **player persona, learning objectives, and gameplay outcomes** that the MVP must support. It serves as acceptance criteria for Copilot and developers.
