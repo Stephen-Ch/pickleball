@@ -1,5 +1,6 @@
 
 import { Component, inject, effect } from '@angular/core';
+import { AudioService } from './audio.service';
 import { RouterModule } from '@angular/router';
 import { NgIf } from '@angular/common';
 import { SettingsService, Difficulty } from './settings.service';
@@ -81,6 +82,7 @@ import { SettingsService, Difficulty } from './settings.service';
 })
 export class ShellComponent {
   settings = inject(SettingsService);
+  audio = inject(AudioService);
   constructor() {
     // Effect for HC mode body class
     effect(() => {
@@ -92,12 +94,19 @@ export class ShellComponent {
     });
   }
   toggleHC() {
+    this.audio.play('click');
     this.settings.setHC(!this.settings.hc());
   }
   toggleMute() {
-    this.settings.setMute(!this.settings.mute());
+    const wasMuted = this.settings.mute();
+    this.settings.setMute(!wasMuted);
+    // Only play click if unmuting (mute is now false)
+    if (wasMuted) {
+      setTimeout(() => this.audio.play('click'), 0);
+    }
   }
   setDifficulty(val: string) {
+    this.audio.play('click');
     this.settings.setDifficulty(val as Difficulty);
   }
 }
