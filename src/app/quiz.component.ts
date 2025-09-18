@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { NgIf, NgFor } from '@angular/common';
 import { QUIZ_QUESTIONS, QuizQuestion } from './quiz-questions';
+import { ProgressService } from './progress.service';
 
 @Component({
   standalone: true,
@@ -54,6 +55,7 @@ export class QuizComponent {
   answered = false;
   isCorrect = false;
   completed = false;
+  progress = inject(ProgressService);
 
   get question(): QuizQuestion|undefined {
     return this.questions[this.idx];
@@ -77,6 +79,10 @@ export class QuizComponent {
       this.isCorrect = false;
     } else {
       this.completed = true;
+      // Update best score in ProgressService if this score is higher
+      if (this.score > this.progress.quizBestScore()) {
+        this.progress.setQuizBestScore(this.score);
+      }
     }
   }
 }

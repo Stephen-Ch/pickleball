@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { NgIf, NgFor } from '@angular/common';
 import { PRACTICE_SCENARIOS, PracticeScenario } from './practice-scenarios';
+import { ProgressService } from './progress.service';
 
 @Component({
   standalone: true,
@@ -50,6 +51,7 @@ export class PracticeComponent {
   answered = false;
   selected: number|null = null;
   isCorrect = false;
+  progress = inject(ProgressService);
 
   get scenario(): PracticeScenario|undefined {
     return this.scenarios[this.idx];
@@ -70,6 +72,8 @@ export class PracticeComponent {
       this.isCorrect = false;
     } else if (this.idx === this.scenarios.length - 1) {
       this.idx++;
+      // Mark practice as completed in ProgressService
+      this.progress.setPracticeCompleted(true);
     }
   }
 }

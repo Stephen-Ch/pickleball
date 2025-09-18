@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { ProgressService } from './progress.service';
 import { NgIf } from '@angular/common';
 import { RULES_CARDS, RuleCard } from './rules-data';
 
@@ -41,6 +42,7 @@ export class RulesComponent {
   cards = RULES_CARDS;
   idx = 0;
   showMore = false;
+  progress = inject(ProgressService);
 
   get card(): RuleCard { return this.cards[this.idx]; }
 
@@ -48,15 +50,26 @@ export class RulesComponent {
     if (this.idx < this.cards.length - 1) {
       this.idx++;
       this.showMore = false;
+      this.updateProgress();
     }
   }
   prev() {
     if (this.idx > 0) {
       this.idx--;
       this.showMore = false;
+      this.updateProgress();
     }
   }
   toggleMore() {
     this.showMore = !this.showMore;
+  }
+
+  updateProgress() {
+    // Set to max viewed so far
+    const viewed = Math.max(this.progress.rulesViewedCount(), this.idx + 1);
+    this.progress.setRulesViewedCount(viewed);
+  }
+  ngOnInit() {
+    this.updateProgress();
   }
 }
