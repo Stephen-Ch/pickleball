@@ -2,6 +2,9 @@ import { Component, ElementRef, ViewChild, AfterViewInit, NgZone, inject } from 
 import { NgForOf, NgStyle } from '@angular/common';
 import { SettingsService } from './settings.service';
 import { AudioService } from './audio.service';
+import { RallyCallService, RallyEvent } from './rally-call.service';
+import { ScoreboardService } from './scoreboard.service';
+import { RallyBannerComponent } from './rally-banner.component';
 
 // Deterministic RNG for testability
 export class SeededRNG {
@@ -19,10 +22,11 @@ export class SeededRNG {
 @Component({
   standalone: true,
   selector: 'app-arcade',
-  imports: [NgForOf, NgStyle],
+  imports: [NgForOf, NgStyle, RallyBannerComponent],
   template: `
     <section class="arcade">
       <h2>Arcade Rally Demo</h2>
+      <div class="score-display">{{ scoreboardService.getThreeNumberScore() }}</div>
       <div #board class="board" (touchstart)="onTouch($event)">
         <div class="ball" [ngStyle]="{ left: ball.x + 'px', top: ball.y + 'px' }"></div>
         <div *ngFor="let p of paddles" class="paddle" [ngStyle]="p.style"></div>
@@ -30,6 +34,7 @@ export class SeededRNG {
       <div class="controls">
         <button (click)="reset()">Restart</button>
       </div>
+      <app-rally-banner #rallyBanner></app-rally-banner>
     </section>
   `,
   styles: [`
@@ -46,6 +51,19 @@ export class SeededRNG {
       color: #e60012;
       text-shadow: 0 2px 0 #fff, 0 4px 8px #0002;
       margin-bottom: 1.2rem;
+    }
+    .score-display {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #e60012;
+      text-align: center;
+      margin-bottom: 1rem;
+      background: linear-gradient(90deg, #fff 0%, #ffe066 100%);
+      border: 2px solid #e60012;
+      border-radius: 1rem;
+      padding: 0.5rem 1rem;
+      display: inline-block;
+      box-shadow: 0 2px 8px #0002;
     }
     .board {
       position: relative;
@@ -104,9 +122,13 @@ export class SeededRNG {
 })
 export class ArcadeComponent implements AfterViewInit {
   @ViewChild('board') boardRef!: ElementRef;
+  @ViewChild('rallyBanner') rallyBanner!: RallyBannerComponent;
+  
   settings: SettingsService;
   audio: AudioService;
   zone: NgZone;
+  rallyCallService: RallyCallService;
+  scoreboardService: ScoreboardService;
 
   ball = { x: 151, y: 151, vx: 2, vy: 2 };
   paddles = [
@@ -125,11 +147,15 @@ export class ArcadeComponent implements AfterViewInit {
   constructor(
     settings?: SettingsService,
     audio?: AudioService,
-    zone?: NgZone
+    zone?: NgZone,
+    rallyCallService?: RallyCallService,
+    scoreboardService?: ScoreboardService
   ) {
     this.settings = settings ?? inject(SettingsService);
     this.audio = audio ?? inject(AudioService);
     this.zone = zone ?? inject(NgZone);
+    this.rallyCallService = rallyCallService ?? inject(RallyCallService);
+    this.scoreboardService = scoreboardService ?? inject(ScoreboardService);
   }
 
   ngAfterViewInit() {
@@ -169,6 +195,13 @@ export class ArcadeComponent implements AfterViewInit {
     if (!this.running) return;
     this.ball.x += this.ball.vx;
     this.ball.y += this.ball.vy;
+    
+    // Check rally end conditions
+    if (this.ball.x <= 0 || this.ball.x >= 302 || this.ball.y <= 0 || this.ball.y >= 302) {
+      this.endRally();
+      return;
+    }
+    
     for (let i = 0; i < 4; i++) {
       const p = this.paddles[i];
       if (this.hitPaddle(p)) {
@@ -186,8 +219,6 @@ export class ArcadeComponent implements AfterViewInit {
       this.lastMove = now;
     }
     this.updatePaddleStyles();
-    this.ball.x = Math.max(0, Math.min(302, this.ball.x));
-    this.ball.y = Math.max(0, Math.min(302, this.ball.y));
     requestAnimationFrame(() => this.loop());
   }
 
@@ -202,5 +233,64 @@ export class ArcadeComponent implements AfterViewInit {
     this.paddles[1].y = Math.max(0, Math.min(260, this.ball.y - 24 + (this.rng.next() < this.errorRate ? this.rng.next() * 40 - 20 : 0)));
     this.paddles[2].x = Math.max(0, Math.min(260, this.ball.x - 30 + (this.rng.next() < this.errorRate ? this.rng.next() * 40 - 20 : 0)));
     this.paddles[3].y = Math.max(0, Math.min(260, this.ball.y - 24 + (this.rng.next() < this.errorRate ? this.rng.next() * 40 - 20 : 0)));
+  }
+
+  endRally() {
+    this.running = false;
+    
+    // Determine rally outcome based on ball position
+    let event: RallyEvent;
+    const servingTeam = this.scoreboardService.scoreboard().servingTeam;
+    
+    if (this.ball.y <= 0) {
+      // Ball went out top (player wins)
+      event = { type: 'point', scoringTeam: 'team1' };
+      if (servingTeam === 'team1') {
+        this.scoreboardService.addPoint('team1');
+      } else {
+        this.scoreboardService.sideOut();
+        this.scoreboardService.addPoint('team1');
+      }
+    } else if (this.ball.y >= 302) {
+      // Ball went out bottom (CPU wins)
+      event = { type: 'fault', reason: 'out' };
+      if (servingTeam === 'team2') {
+        this.scoreboardService.addPoint('team2');
+      } else {
+        this.scoreboardService.sideOut();
+      }
+    } else {
+      // Ball went out side (random for demo)
+      if (this.rng.next() < 0.5) {
+        event = { type: 'point', scoringTeam: 'team1' };
+        if (servingTeam === 'team1') {
+          this.scoreboardService.addPoint('team1');
+        } else {
+          this.scoreboardService.sideOut();
+          this.scoreboardService.addPoint('team1');
+        }
+      } else {
+        event = { type: 'fault', reason: 'out' };
+        if (servingTeam === 'team2') {
+          this.scoreboardService.addPoint('team2');
+        } else {
+          this.scoreboardService.sideOut();
+        }
+      }
+    }
+
+    // Show rally call
+    const call = this.rallyCallService.makeCall(event);
+    this.rallyBanner.call = call.call;
+    this.rallyBanner.explainer = call.explainer;
+    this.rallyBanner.score = this.scoreboardService.getThreeNumberScore();
+    this.rallyBanner.show();
+
+    // Restart rally after delay
+    setTimeout(() => {
+      this.ball = { x: 151, y: 151, vx: 2, vy: 2 };
+      this.running = true;
+      this.zone.runOutsideAngular(() => this.loop());
+    }, 4000);
   }
 }
