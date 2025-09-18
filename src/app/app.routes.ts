@@ -5,6 +5,7 @@ import { Practice } from './practice/practice';
 import { Quiz } from './quiz/quiz';
 import { BadgesComponent } from './components/badges/badges.component';
 import { OfflineComponent } from './offline/offline.component';
+import { SponsorsComponent } from './sponsors/sponsors.component';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -12,6 +13,7 @@ export const routes: Routes = [
   { path: 'practice', component: Practice },
   { path: 'quiz', component: Quiz },
   { path: 'badges', component: BadgesComponent },
+  { path: 'sponsors', component: SponsorsComponent },
   { path: 'offline', component: OfflineComponent },
   { path: '**', redirectTo: '' } // Wildcard route - must be last
 ];

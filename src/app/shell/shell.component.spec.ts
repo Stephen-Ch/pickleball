@@ -76,7 +76,8 @@ describe('Shell - Accessibility', () => {
         'Learn pickleball rules',
         'Practice pickleball scenarios',
         'Take pickleball knowledge quiz',
-        'View earned badges and achievements'
+        'View earned badges and achievements',
+        'View our sponsors and supporters'
       ];
 
       navLinks.forEach((link: HTMLElement, index: number) => {

@@ -19,6 +19,7 @@ import { By } from '@angular/platform-browser';
           <li><a routerLink="/practice" routerLinkActive="active" tabindex="0" aria-label="Practice pickleball scenarios">Practice</a></li>
           <li><a routerLink="/quiz" routerLinkActive="active" tabindex="0" aria-label="Take pickleball knowledge quiz">Quiz</a></li>
           <li><a routerLink="/badges" routerLinkActive="active" tabindex="0" aria-label="View earned badges and achievements">Badges</a></li>
+          <li><a routerLink="/sponsors" routerLinkActive="active" tabindex="0" aria-label="View our sponsors and supporters">Sponsors</a></li>
         </ul>
       </nav>
     </header>
@@ -85,7 +86,8 @@ describe('Application - Accessibility Integration', () => {
         'Learn pickleball rules',
         'Practice pickleball scenarios',
         'Take pickleball knowledge quiz',
-        'View earned badges and achievements'
+        'View earned badges and achievements',
+        'View our sponsors and supporters'
       ];
 
       navLinks.forEach((link, index) => {
