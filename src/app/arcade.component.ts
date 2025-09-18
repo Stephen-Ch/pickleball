@@ -27,7 +27,7 @@ export class SeededRNG {
     <section class="arcade">
       <h2>Arcade Rally Demo</h2>
       <div class="score-display">{{ scoreboardService.getThreeNumberScore() }}</div>
-      <div #board class="board" (touchstart)="onTouch($event)">
+      <div #board class="board" (touchstart)="onTouch($event)" (mousemove)="onMouse($event)">
         <div class="ball" [ngStyle]="{ left: ball.x + 'px', top: ball.y + 'px' }"></div>
         <div *ngFor="let p of paddles" class="paddle" [ngStyle]="p.style"></div>
       </div>
@@ -159,7 +159,8 @@ export class ArcadeComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.reset();
+    // Delay the reset to avoid change detection issues
+    setTimeout(() => this.reset(), 0);
   }
 
   reset() {
@@ -180,6 +181,13 @@ export class ArcadeComponent implements AfterViewInit {
   onTouch(event: TouchEvent) {
     const rect = this.boardRef.nativeElement.getBoundingClientRect();
     const x = event.touches[0].clientX - rect.left;
+    this.paddles[0].x = Math.max(0, Math.min(260, x - 30));
+    this.updatePaddleStyles();
+  }
+
+  onMouse(event: MouseEvent) {
+    const rect = this.boardRef.nativeElement.getBoundingClientRect();
+    const x = event.clientX - rect.left;
     this.paddles[0].x = Math.max(0, Math.min(260, x - 30));
     this.updatePaddleStyles();
   }

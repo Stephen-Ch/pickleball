@@ -12,7 +12,8 @@ export const routes: Routes = [
     path: '',
     component: ShellComponent,
     children: [
-      { path: '', component: HomeComponent },
+      { path: '', component: ArcadeComponent },
+      { path: 'home', component: HomeComponent },
       { path: 'rules', component: RulesComponent },
       { path: 'practice', component: PracticeComponent },
   { path: 'quiz', component: QuizComponent },
